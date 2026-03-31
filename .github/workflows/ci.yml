@@ -23,6 +23,7 @@ jobs:
 
       - name: Pull DVC artifacts
         run: |
+          dvc remote modify localremote url ./dvc_storage
           dvc pull --force data/iris_test.csv models/model_v1.joblib
 
       - name: Run tests
