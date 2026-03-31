@@ -23,7 +23,7 @@ jobs:
 
       - name: Pull DVC artifacts
         run: |
-          dvc pull data/iris_test.csv models/model_v1.joblib
+          dvc pull --force data/iris_test.csv models/model_v1.joblib
 
       - name: Run tests
         run: pytest -q
