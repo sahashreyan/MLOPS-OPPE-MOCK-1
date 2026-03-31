@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Data and model artifacts
+mlruns/
+*.log
+
+# DVC local cache and temporary outputs
+.dvc/cache/
+.dvc/tmp/
+.git/COMMIT_MSG
+

@@ -1,0 +1,111 @@
+schema: '2.0'
+stages:
+  prepare_iris_v0:
+    cmd: python -m src.data_prep prepare-version --input data/iris_v0.csv 
+      --output data/iris_v0_prepared.csv --seed 42 --missing-rate 0.10
+    deps:
+    - path: data/iris_v0.csv
+      hash: md5
+      md5: 9c22f7cf3714d0c194f5f43a6276ca9d
+      size: 3861
+    - path: src/data_prep.py
+      hash: md5
+      md5: ad61bf0c668ee969e367d3a046a35ef3
+      size: 3553
+    outs:
+    - path: data/iris_v0_prepared.csv
+      hash: md5
+      md5: f1ab484bdd2bf4dd2f450d3aaf938c8b
+      size: 2744
+  prepare_iris_v1:
+    cmd: python -m src.data_prep prepare-version --input data/iris_v1.csv 
+      --output data/iris_v1_prepared.csv --seed 43 --missing-rate 0.10
+    deps:
+    - path: data/iris_v1.csv
+      hash: md5
+      md5: 4954d4088152604322732f13c4e14691
+      size: 2606
+    - path: src/data_prep.py
+      hash: md5
+      md5: ad61bf0c668ee969e367d3a046a35ef3
+      size: 3553
+    outs:
+    - path: data/iris_v1_prepared.csv
+      hash: md5
+      md5: 974818dd0a2c810120264e71fb4990c9
+      size: 1852
+  train_v0:
+    cmd: python -m src.train --iteration v0 --data-dir data --model-path 
+      models/model_v0.joblib --metrics-path models/metrics_v0.json
+    deps:
+    - path: data/iris_v0_prepared.csv
+      hash: md5
+      md5: f1ab484bdd2bf4dd2f450d3aaf938c8b
+      size: 2744
+    - path: src/imputers.py
+      hash: md5
+      md5: 2f5fbb2d7e569cc45b3dff08a55d4c16
+      size: 2466
+    - path: src/train.py
+      hash: md5
+      md5: e3ba6bbe98a55536824c1c3c73c82fc5
+      size: 4293
+    outs:
+    - path: models/metrics_v0.json
+      hash: md5
+      md5: 91dd2717e76ef7ad0cbfb28d08f572ad
+      size: 183
+    - path: models/model_v0.joblib
+      hash: md5
+      md5: 0d714e90913304154bbdae7074538e32
+      size: 12039
+  train_v1:
+    cmd: python -m src.train --iteration v1 --data-dir data --model-path 
+      models/model_v1.joblib --metrics-path models/metrics_v1.json
+    deps:
+    - path: data/iris_v0_prepared.csv
+      hash: md5
+      md5: f1ab484bdd2bf4dd2f450d3aaf938c8b
+      size: 2744
+    - path: data/iris_v1_prepared.csv
+      hash: md5
+      md5: 974818dd0a2c810120264e71fb4990c9
+      size: 1852
+    - path: src/imputers.py
+      hash: md5
+      md5: 2f5fbb2d7e569cc45b3dff08a55d4c16
+      size: 2466
+    - path: src/train.py
+      hash: md5
+      md5: e3ba6bbe98a55536824c1c3c73c82fc5
+      size: 4293
+    outs:
+    - path: models/metrics_v1.json
+      hash: md5
+      md5: 1a29ac327e5088d77e16628967b99731
+      size: 214
+    - path: models/model_v1.joblib
+      hash: md5
+      md5: 0d8a63b2422530caf6856ed4f28414f4
+      size: 18823
+  prepare_test_data:
+    cmd: python -m src.data_prep prepare-test --v0 data/iris_v0.csv --v1 
+      data/iris_v1.csv --output data/iris_test.csv --seed 44 --missing-rate 0.10
+    deps:
+    - path: data/iris_v0.csv
+      hash: md5
+      md5: 9c22f7cf3714d0c194f5f43a6276ca9d
+      size: 3861
+    - path: data/iris_v1.csv
+      hash: md5
+      md5: 4954d4088152604322732f13c4e14691
+      size: 2606
+    - path: src/data_prep.py
+      hash: md5
+      md5: ad61bf0c668ee969e367d3a046a35ef3
+      size: 3553
+    outs:
+    - path: data/iris_test.csv
+      hash: md5
+      md5: 4527ffc2ea01cc975a6aebd80b78017b
+      size: 965

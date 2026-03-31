@@ -1,0 +1,46 @@
+stages:
+  prepare_iris_v0:
+    cmd: python -m src.data_prep prepare-version --input data/iris_v0.csv --output data/iris_v0_prepared.csv --seed 42 --missing-rate 0.10
+    deps:
+      - src/data_prep.py
+      - data/iris_v0.csv
+    outs:
+      - data/iris_v0_prepared.csv
+
+  prepare_iris_v1:
+    cmd: python -m src.data_prep prepare-version --input data/iris_v1.csv --output data/iris_v1_prepared.csv --seed 43 --missing-rate 0.10
+    deps:
+      - src/data_prep.py
+      - data/iris_v1.csv
+    outs:
+      - data/iris_v1_prepared.csv
+
+  prepare_test_data:
+    cmd: python -m src.data_prep prepare-test --v0 data/iris_v0.csv --v1 data/iris_v1.csv --output data/iris_test.csv --seed 44 --missing-rate 0.10
+    deps:
+      - src/data_prep.py
+      - data/iris_v0.csv
+      - data/iris_v1.csv
+    outs:
+      - data/iris_test.csv
+
+  train_v0:
+    cmd: python -m src.train --iteration v0 --data-dir data --model-path models/model_v0.joblib --metrics-path models/metrics_v0.json
+    deps:
+      - src/train.py
+      - src/imputers.py
+      - data/iris_v0_prepared.csv
+    outs:
+      - models/model_v0.joblib
+      - models/metrics_v0.json
+
+  train_v1:
+    cmd: python -m src.train --iteration v1 --data-dir data --model-path models/model_v1.joblib --metrics-path models/metrics_v1.json
+    deps:
+      - src/train.py
+      - src/imputers.py
+      - data/iris_v0_prepared.csv
+      - data/iris_v1_prepared.csv
+    outs:
+      - models/model_v1.joblib
+      - models/metrics_v1.json
