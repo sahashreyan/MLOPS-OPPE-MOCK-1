@@ -21,10 +21,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Pull DVC artifacts
+      - name: Reproduce DVC outputs needed for tests
         run: |
-          dvc remote modify localremote url ./dvc_storage
-          dvc pull --force data/iris_test.csv models/model_v1.joblib
+          dvc repro prepare_test_data
+          dvc repro train_v1
 
       - name: Run tests
         run: pytest -q
